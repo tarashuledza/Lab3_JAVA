@@ -7,51 +7,57 @@ import java.util.*;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) throws IOException, ClassNotFoundException, Exception {
-      Map<Product, Integer> productList = new HashMap<>();
-        Product product = new Product(1L, "Bananas", 500, ProductType.FRUITS);
-        Product product2 = new Product(2L, "Chicken", 300, ProductType.MEAT);
-        Product product3 = new Product(3L, "Package", 0.1, ProductType.GOODS);
-       productList.put(product, 5);
-       productList.put(product2, 5);
-       productList.put(product3, 10);
-       FileService.writeObjectToFile("Products.txt", productList);
-
         Market market = new Market();
-       // market.addProduct(new program.Product(2L, "yuri2", 200, program.ProductType.MEAT), 6);
 
-        System.out.println(market.getAveragePrice());
-        System.out.println(FileService.readObjectAsMap("Products.txt"));
-        market.sortProductsByPrice(100, 350);
+        Product apple = new Product(1L, "Apple", 1.0, ProductType.FRUITS);
+        Product banana = new Product(2L, "Banana", 0.5, ProductType.FRUITS);
 
-        Calendar date = new GregorianCalendar(2023, Calendar.MARCH,25);
-        Calendar date2 = new GregorianCalendar(2023, Calendar.MARCH,28);
+        market.addProduct(apple, 100);
+        market.addProduct(banana, 50);
 
         Customer customer = new Customer("Taras", "Huledza");
-        Receipt receipt = new Receipt(customer, date);
-        Receipt receipt1 = new Receipt(customer, date2);
 
+        Receipt receipt = new Receipt(customer, Calendar.getInstance());
+        receipt.addProduct(apple, 5);
+        receipt.addProduct(banana, 3);
 
+        receipt.pay();
 
-        receipt.addProduct(product, 2);
-     System.out.println(receipt.createReceipt());
-       // receipt.addProduct(product2, 3);
-        //receipt1.addProduct(product2, 2);
-        //System.out.println(receipt.createReceipt());
-        //program.FileService.writeTextToFile(receipt.createReceipt(), "program.Receipt.txt");
-//market.printProductList();
-        //market.createReceipt(receipt);
-        //customer.displayReceipts();
-        //customer.getTotalProductQuantities().forEach((key, value) -> System.out.println(key.getName() + ": " + value));
-        //System.out.println(market.mostPopularProduct());
-        //market.printReceipts();
-        //market.biggestIncomeByDay();
-        Product product1 = new Product(5L, "Bohdan", 12, ProductType.GOODS);
-       // market.addProduct(product1, 4);
-       // market.printProductList();
-//        market.addProduct(product1, 1);
-//        market.addProduct(product1, 2);
-        market.createReceipt(receipt);
-        market.createReceipt(receipt1);
-        market.mostPopularProduct();
+        customer.addReceipt(receipt);
+
+        Receipt anotherReceipt = new Receipt(customer, Calendar.getInstance());
+        anotherReceipt.addProduct(apple, 2);
+
+        anotherReceipt.pay();
+
+        customer.addReceipt(anotherReceipt);
+
+        Customer anotherCustomer = new Customer("Yarik", "Teslitskiy");
+        Receipt thirdReceipt = new Receipt(anotherCustomer, Calendar.getInstance());
+        thirdReceipt.addProduct(banana, 10);
+        thirdReceipt.addProduct(apple, 3);
+
+        thirdReceipt.pay();
+
+        anotherCustomer.addReceipt(thirdReceipt);
+
+        System.out.println("Total Product Quantities: " + customer.getTotalProductQuantities());
+
+        Calendar startDate = Calendar.getInstance();
+        Calendar endDate = Calendar.getInstance();
+        startDate.add(Calendar.DAY_OF_MONTH, -7);
+
+        double totalCost = customer.costBetweenDates(startDate, endDate);
+        System.out.println("Total Cost between dates: " + totalCost);
+
+        market.printProductList();
+
+        market.printReceipts();
+
+        System.out.println("Average Product Price: " + market.getAveragePrice());
+
+        System.out.println("Most Popular Product: " + market.mostPopularProduct());
+
+        market.biggestIncomeByDay();
     }
 }
